@@ -99,7 +99,9 @@ func startServer(c *cli.Context) error {
 	// Print a local-friendly startup banner so I can quickly confirm the process
 	// is running when tailing logs without grepping.
 	// Also log to stderr so it shows up even when stdout is redirected to a file.
-	fmt.Fprintf(os.Stderr, "[livekit-server %s] listening on port %d\n", version, conf.Port)
+	// Added start time so I can tell restarts apart at a glance.
+	fmt.Fprintf(os.Stderr, "[livekit-server %s] listening on port %d (started %s)\n",
+		version, conf.Port, time.Now().Format(time.RFC3339))
 
 	return srv.Start()
 }
