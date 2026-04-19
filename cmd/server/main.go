@@ -100,8 +100,9 @@ func startServer(c *cli.Context) error {
 	// is running when tailing logs without grepping.
 	// Also log to stderr so it shows up even when stdout is redirected to a file.
 	// Added start time so I can tell restarts apart at a glance.
+	startTime := time.Now()
 	fmt.Fprintf(os.Stderr, "[livekit-server %s] listening on port %d (started %s)\n",
-		version, conf.Port, time.Now().Format(time.RFC3339))
+		version, conf.Port, startTime.Format(time.RFC3339))
 
 	return srv.Start()
 }
