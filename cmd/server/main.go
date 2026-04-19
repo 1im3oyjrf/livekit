@@ -82,11 +82,13 @@ func startServer(c *cli.Context) error {
 
 	sigChan := make(chan os.Signal, 1)
 	// Also handle SIGHUP so the process can be gracefully stopped by init systems
+	// Note: SIGUSR1 would be handy for log rotation but not adding that complexity here
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGHUP)
 
 	go func() {
 		sig := <-sigChan
 		logger.Infow("received signal, shutting down", "signal", sig)
+		// graceful=true ensures in-progress sessions are allowed to finish
 		srv.Stop(true)
 	}()
 
