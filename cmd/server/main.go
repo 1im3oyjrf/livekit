@@ -96,5 +96,9 @@ func startServer(c *cli.Context) error {
 		srv.Stop(true)
 	}()
 
+	// Print a local-friendly startup banner so I can quickly confirm the process
+	// is running when tailing logs without grepping.
+	fmt.Printf("[livekit-server %s] listening on port %d\n", version, conf.Port)
+
 	return srv.Start()
 }
