@@ -84,6 +84,7 @@ func startServer(c *cli.Context) error {
 	// Handle common termination signals. SIGUSR1 is also trapped here to make it
 	// easy to trigger a clean shutdown from scripts during local development
 	// (e.g. `kill -USR1 <pid>` instead of SIGINT which can be noisy in tmux).
+	// Note: SIGUSR2 is intentionally omitted; I use it externally for profiling.
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGHUP, syscall.SIGUSR1)
 
 	go func() {
