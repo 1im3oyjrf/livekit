@@ -81,9 +81,10 @@ func startServer(c *cli.Context) error {
 	}
 
 	sigChan := make(chan os.Signal, 1)
-	// Also handle SIGHUP so the process can be gracefully stopped by init systems
-	// Note: SIGUSR1 would be handy for log rotation but not adding that complexity here
-	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGHUP)
+	// Handle common termination signals. SIGUSR1 is also trapped here to make it
+	// easy to trigger a clean shutdown from scripts during local development
+	// (e.g. `kill -USR1 <pid>` instead of SIGINT which can be noisy in tmux).
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGHUP, syscall.SIGUSR1)
 
 	go func() {
 		sig := <-sigChan
