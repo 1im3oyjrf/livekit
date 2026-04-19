@@ -88,9 +88,10 @@ func startServer(c *cli.Context) error {
 	go func() {
 		sig := <-sigChan
 		logger.Infow("received signal, shutting down", "signal", sig)
-		// graceful=false here so shutdown is immediate in my local dev environment;
-		// change back to true for any production-like deployment
-		srv.Stop(false)
+		// Use graceful shutdown so in-flight requests can finish cleanly.
+		// Previously set to false for quick local dev restarts, but graceful=true
+		// is safer even locally to avoid torn connections during testing.
+		srv.Stop(true)
 	}()
 
 	return srv.Start()
